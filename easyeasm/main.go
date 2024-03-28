@@ -106,13 +106,20 @@ func main() {
 	fmt.Printf(" => Active DNS subdomains found this run: %d\n", Runner.Results)
 	// fmt.Println(Runner.Subdomains)
 	for _, domain := range Runner.Subdomains {
-		if !domainExists(db, domain) {
-			insertDomain(db, domain)
-		} else if !domainIsActive(db, domain) {
-			updateActiveDomain(db, domain, true)
-		}
-		if !contains(currentActiveDomains, domain) {
-			newActiveDomains = append(newActiveDomains, domain)
+		_, err := net.LookupHost(domain)
+		if err != nil {
+			if !domainExists(db, domain) {
+				updateActiveDomain(db, domain, false)
+			}
+		} else {
+			if !domainExists(db, domain) {
+				insertDomain(db, domain)
+			} else if !domainIsActive(db, domain) {
+				updateActiveDomain(db, domain, true)
+			}
+			if !contains(currentActiveDomains, domain) {
+				newActiveDomains = append(newActiveDomains, domain)
+			}
 		}
 	}
 
