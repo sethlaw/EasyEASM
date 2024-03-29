@@ -77,6 +77,7 @@ func main() {
 			}
 		} else {
 			currentActiveDomains = append(currentActiveDomains, domain)
+			updateActiveDomain(db, domain, true)
 		}
 	}
 	for _, domain := range oldLiveDomains {
@@ -88,6 +89,12 @@ func main() {
 			updateLiveDomain(db, domain, false)
 		} else {
 			currentLiveDomains = append(currentLiveDomains, domain)
+			updateLiveDomain(db, domain, true)
+			if !contains(currentActiveDomains, domain) {
+				newActiveDomains = append(newActiveDomains, domain)
+				currentActiveDomains = append(currentActiveDomains, domain)
+				updateActiveDomain(db, domain, true)
+			}
 		}
 	}
 
@@ -138,11 +145,21 @@ func main() {
 				insertDomain(db, domain)
 				updateLiveDomain(db, domain, true)
 			}
-			if !domainIsLive(db, domain) {
+			_, err1 := client.Get("http://" + domain)
+			_, err2 := client.Get("https://" + domain)
+			if err1 != nil && err2 != nil {
+				updateLiveDomain(db, domain, false)
+			} else {
+				if !contains(currentLiveDomains, domain) {
+					newLiveDomains = append(newLiveDomains, domain)
+					currentLiveDomains = append(currentLiveDomains, domain)
+				}
+				if !contains(currentActiveDomains, domain) {
+					newActiveDomains = append(newActiveDomains, domain)
+					currentActiveDomains = append(currentActiveDomains, domain)
+					updateActiveDomain(db, domain, true)
+				}
 				updateLiveDomain(db, domain, true)
-			}
-			if !contains(currentLiveDomains, domain) {
-				newLiveDomains = append(newLiveDomains, domain)
 			}
 		}
 
@@ -183,6 +200,11 @@ func main() {
 				if !contains(currentLiveDomains, domain) {
 					newLiveDomains = append(newLiveDomains, domain)
 					currentLiveDomains = append(currentLiveDomains, domain)
+				}
+				if !contains(currentActiveDomains, domain) {
+					newActiveDomains = append(newActiveDomains, domain)
+					currentActiveDomains = append(currentActiveDomains, domain)
+					updateActiveDomain(db, domain, true)
 				}
 				updateLiveDomain(db, domain, true)
 			}
