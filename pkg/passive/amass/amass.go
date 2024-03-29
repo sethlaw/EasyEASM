@@ -15,7 +15,7 @@ func RunAmass(seedDomain string, results chan string, wg *sync.WaitGroup) {
 	err := cmd.Run()
 
 	if err != nil {
-		panic(err)
+		fmt.Print(err)
 	}
 	cmd = exec.Command("oam_subs", "-names", "-d", seedDomain)
 	var out bytes.Buffer
@@ -23,7 +23,7 @@ func RunAmass(seedDomain string, results chan string, wg *sync.WaitGroup) {
 
 	err = cmd.Run()
 	if err != nil {
-		panic(err)
+		fmt.Print(err)
 	}
 
 	for _, domain := range strings.Split(out.String(), "\n") {

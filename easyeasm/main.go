@@ -28,6 +28,7 @@ func main() {
 
 	// parse the configuration file
 	cfg := configparser.ParseConfig()
+	fmt.Println(" => Domain(s): ", cfg.RunConfig.Domains)
 
 	// db setup
 	if _, err := os.Stat("easyeasm.db"); err == nil {
