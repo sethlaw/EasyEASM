@@ -44,7 +44,7 @@ func NotifyNewDomainsDiscord(newDomains []string, discordWebhook string) {
 	// Open the CSV file
 	inputFile, err := os.Open("old_EasyEASM.csv")
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 	defer inputFile.Close()
 
@@ -69,7 +69,7 @@ func NotifyNewDomainsDiscord(newDomains []string, discordWebhook string) {
 				break
 			} else {
 				// Some other error
-				panic(err)
+				fmt.Println(err)
 			}
 		}
 

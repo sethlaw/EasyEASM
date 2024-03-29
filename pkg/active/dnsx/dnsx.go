@@ -22,7 +22,7 @@ func RunDnsx(seedDomains []string, wordlist string, threads int) []string {
 			err := cmd.Run()
 
 			if err != nil {
-				panic(err)
+				fmt.Println(err)
 			}
 
 			for _, domain := range strings.Split(out.String(), "\n") {

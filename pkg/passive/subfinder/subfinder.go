@@ -18,7 +18,7 @@ func RunSubfinder(seedDomain string, results chan string, wg *sync.WaitGroup) {
 	err := cmd.Run()
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
 	}
 
 	for _, domain := range strings.Split(out.String(), "\n") {
